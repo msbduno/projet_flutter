@@ -1,5 +1,10 @@
-class Company {
-  final String name;
+import 'address_model.dart';
 
-  const Company(this.name);
+class Company {
+
+
+  final String name;
+  final Address address;
+
+  const Company( this.name, this.address);
 }
