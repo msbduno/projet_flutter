@@ -17,7 +17,6 @@ class AddressCubit  extends Cubit<List<Address>> {
     ]);
   }
 
-
   /// Méthode pour rechercher une adresse
   Future<void> fetchAddresses(String query) async {
     try {

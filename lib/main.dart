@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tp/repositories/address_repository.dart';
+import 'package:tp/repositories/preferences_repository.dart';
 import 'package:tp/ui/screens/searchAddress_screen.dart';
 import 'blocs/address_cubit.dart';
 import 'blocs/company_cubit.dart';
@@ -13,7 +14,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Instanciation du Cubit
-  final CompanyCubit companyCubit = CompanyCubit();
+  final CompanyCubit companyCubit = CompanyCubit( PreferencesRepository() );
   final AddressCubit addressCubit = AddressCubit( AddressRepository() );
 
   // Chargement des adresses
