@@ -29,4 +29,8 @@ class CompanyCubit extends Cubit<List<Company>> {
     emit(updatedCompanies);
     await preferencesRepository.saveCompanies(updatedCompanies);
   }
+
+  void removeCompany(String companyName) {
+    emit(state.where((company) => company.name != companyName).toList());
+  }
 }

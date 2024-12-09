@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/company_cubit.dart';
-import 'addcompany_screen.dart';
+import '../widgets/bottomNavigationBar_widget.dart';
+import 'addCompany_screen.dart';
 import '../../models/company_model.dart';
 
 class Home extends StatefulWidget {
@@ -10,6 +11,7 @@ class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
 }
+int _selectedIndex = 0;
 
 class _HomeState extends State<Home> {
   @override
@@ -28,8 +30,13 @@ class _HomeState extends State<Home> {
               final Company company = state[index];
               return ListTile(
                 title: Text(company.name),
-                subtitle:
-                    Text('${company.address.street}, ${company.address.city}'),
+                subtitle: Text('${company.address.street}, ${company.address.city}'),
+                trailing: IconButton(
+                  icon: Icon(Icons.close, color: Colors.red),
+                  onPressed: () {
+                    context.read<CompanyCubit>().removeCompany(company.name);
+                  },
+                ),
               );
             },
             separatorBuilder: (BuildContext context, int index) {
@@ -43,6 +50,9 @@ class _HomeState extends State<Home> {
           Navigator.pushNamed(context, '/add_company');
         },
         child: const Icon(Icons.add),
+      ),
+      bottomNavigationBar: CustomBottomNavigationBar(
+        currentIndex: _selectedIndex,
       ),
     );
   }

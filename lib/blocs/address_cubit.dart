@@ -11,9 +11,7 @@ class AddressCubit  extends Cubit<List<Address>> {
   /// Méthode pour charger la liste d'entreprise
   Future<void> loadAddresses() async {
     emit([
-      Address('street', 'city', 'postcode'),
-      Address('street', 'city', 'postcode'),
-      Address('street', 'city', 'postcode'),
+
     ]);
   }
 
