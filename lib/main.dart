@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tp/repositories/address_repository.dart';
 import 'package:tp/ui/screens/searchAddress_screen.dart';
+import 'blocs/address_cubit.dart';
 import 'blocs/company_cubit.dart';
 import 'ui/screens/home_screen.dart';
 import 'ui/screens/addcompany_screen.dart';
@@ -12,13 +14,24 @@ void main() {
 
   // Instanciation du Cubit
   final CompanyCubit companyCubit = CompanyCubit();
+  final AddressCubit addressCubit = AddressCubit( AddressRepository() );
+
+  // Chargement des adresses
+  addressCubit.loadAddresses();
 
   // Chargement des entreprises
   companyCubit.loadCompanies();
 
   runApp(
-      BlocProvider<CompanyCubit>(
-        create: (_) => companyCubit,
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<CompanyCubit>(
+            create: (_) => companyCubit,
+          ),
+          BlocProvider<AddressCubit>(
+            create: (_) => addressCubit,
+          ),
+        ],
         child: const MyApp(),
       )
   );

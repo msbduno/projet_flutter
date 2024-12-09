@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:async';
-
+import '../../blocs/address_cubit.dart';
 import '../../models/address_model.dart';
-import '../../repositories/address_repository.dart';
+
 
 class SearchAddress extends StatefulWidget {
   const SearchAddress({Key? key}) : super(key: key);
@@ -10,11 +11,6 @@ class SearchAddress extends StatefulWidget {
   @override
   _SearchAddressState createState() => _SearchAddressState();
 }
-
-List<Address> _addresses = [
-  Address('Place du Ralliement', 'Angers', '49000'),
-  Address('19 rue André le Notre', 'Angers', '49066'),
-];
 
 class _SearchAddressState extends State<SearchAddress> {
   Timer? _debounce;
@@ -51,31 +47,26 @@ class _SearchAddressState extends State<SearchAddress> {
               if (_debounce?.isActive ?? false) _debounce?.cancel();
               _debounce = Timer(const Duration(milliseconds: 500), () {
                 if (query.length >= 3) {
-                  final AddressRepository addressRepository = AddressRepository();
-                  addressRepository.fetchAddresses(query).then((addresses) {
-                    setState(() {
-                      _addresses = addresses;
-                    });
-                  }).catchError((error) {
-                    _scaffoldMessenger?.showSnackBar(
-                      SnackBar(content: Text('Failed to load addresses: $error')),
-                    );
-                  });
+                  context.read<AddressCubit>().fetchAddresses(query);
                 }
               });
             },
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: _addresses.length,
-              itemBuilder: (context, index) {
-                final address = _addresses[index];
-                return ListTile(
-                  leading: Icon(Icons.location_on),
-                  title: Text(address.street),
-                  subtitle: Text('${address.city}, ${address.postCode}'),
-                  onTap: () {
-                    Navigator.pop(context, address);
+            child: BlocBuilder<AddressCubit, List<Address>>(
+              builder: (context, addresses) {
+                return ListView.builder(
+                  itemCount: addresses.length,
+                  itemBuilder: (context, index) {
+                    final address = addresses[index];
+                    return ListTile(
+                      leading: const Icon(Icons.location_on),
+                      title: Text(address.street),
+                      subtitle: Text('${address.city}, ${address.postCode}'),
+                      onTap: () {
+                        Navigator.pop(context, address);
+                      },
+                    );
                   },
                 );
               },
